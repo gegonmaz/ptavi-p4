@@ -21,6 +21,33 @@ class SIPRegisterHandler(socketserver.DatagramRequestHandler):
 
     # Variable de uso general por tanto fuera de clase.
 
+    def register2json(self):
+
+        """
+        Este metodo creara un archivo con todos los usuarios registrados y sus
+        direciones ips
+        """
+
+        fichero_reg = open('registered.json', 'w')
+        json.dump(self.dicc_usuarios, fichero_reg, indent=4)
+        fichero_reg.close()
+
+    def json2registered(self):
+
+        """
+        Comprabara que el fichero no existe, y lo creara.
+        """
+
+        try:
+            with open('registered.json', 'r') as fichero_reg:
+                self.dicc_usuarios = json.load(fichero_reg)
+                fichero_reg.close()
+        except ValueError:
+            json.dump(self.dicc_usuarios, fichero_reg)
+            fichero_reg.close()
+        except:
+            pass
+
     def handle(self):
         """
         Este metodo sera el que trabaje como manejador del servidor UDP
@@ -71,30 +98,6 @@ class SIPRegisterHandler(socketserver.DatagramRequestHandler):
                 del self.dicc_usuarios[IP]
             print('Los usuarios actuales son: ', self.dicc_usuarios)
 
-    def register2json(self):
-
-        """
-        Este metodo creara un archivo con todos los usuarios registrados y sus
-        direciones ips
-        """
-
-        fichero_reg = open('registered.json', 'w')
-        json.dump(self.dicc_usuarios, fichero_reg, indent=4)
-        fichero_reg.close()
-
-    def json2registered(self):
-
-        """
-        Comprabara que el fichero no existe, y lo creara.
-        """
-
-        try:
-            with open('registered.json', 'r') as fichero_reg:
-                self.dicc_usuarios = json.load(fichero_reg)
-                fichero_reg.close()
-        except ValueError:
-            json.dump(self.dicc_usuarios, fichero_reg)
-            fichero_reg.close()
 
 if __name__ == "__main__":
 
@@ -104,15 +107,15 @@ if __name__ == "__main__":
     """
 
     # serv = socketserver.UDPServer(('', 6001), EchoHandler)
-
     try:
-        serv = socketserver.UDPServer(('', int(sys.argv[1])),
-                                      SIPRegisterHandler)
-        print('Lanzando servidor UDP de eco...')
-        serv.serve_forever()
-
+        try:
+            PORT = int(sys.argv[1])
+            except IndexError:
+                sys.exit('Usage: server.py Port')
     except ValueError:
-        print('PUERTO NO ENCONTRADO')
-
+        sys.exit('Port need to be a number')
+        serv = socketserver.UDPServer(('', PORT), SIPRegisterHandler)
+        print("Lanzando servidor SIP")
+        serv.serve_forever()
     except KeyboardInterrupt:       # Ctrl + C--> interrumpimos servidor
         print("Finalizado servidor")
