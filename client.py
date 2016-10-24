@@ -16,10 +16,13 @@ try:
 except ValueError:
     print('Error en IP PUERTO')
 #Aqui enviaremos texto (mensaje)--> join. nos divide el diccionario por ' '.
+
 if str(sys.argv[3]) == 'register':
-    nombre_usuario_sip =sys.argv[4]
+    nombre_usuario_sip =sys.argv[4]    
     print('BIENVENIDO ' + nombre_usuario_sip)
-LINE = ' '.join(sys.argv[3:])
+#Ejercico 7--> vamos a añadirle tiempo de caducidad de la conexion
+mensaje = 'REGISTER' + ' sip: '
+LINE = mensaje + ' '.join(sys.argv[4:])
 # Creamos el socket, lo configuramos y lo atamos a un servidor/puerto
 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as my_socket:
     my_socket.connect((SERVER, PORT))
