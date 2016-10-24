@@ -30,7 +30,7 @@ class SIPRegisterHandler(socketserver.DatagramRequestHandler):
             if mensaje[0] == 'REGISTER':
                 self.dicc_usuarios[mensaje[2]] = IP              
                 if int(mensaje[3]) == 0:
-                    del self.dicc_usuarios[IP]
+                    del self.dicc_usuarios[mensaje[2]]
                     self.wfile.write(b'SIP/2.0 200 OK\r\n\r\n')
                 else:
                     self.wfile.write(b'SIP/2.0 200 OK\r\n\r\n')
