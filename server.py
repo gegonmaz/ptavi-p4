@@ -14,11 +14,11 @@ class EchoHandler(socketserver.DatagramRequestHandler):
 
     def handle(self):
         self.wfile.write(b"Hemos recibido tu peticion")
-        #IP = str(self.client_address[0])
-        #print('Dir. IP del cliente: ' + IP)
-        #PUERTO = int(self.client_address[1])
-        #print('Puerto donde escucha cliente: ' + PUERTO) 
-        print(self.client_address)
+        IP = str(self.client_address[0])
+        print('Dir. IP del cliente: ' + IP)
+        PUERTO = str(self.client_address[1])
+        print('Puerto donde escucha cliente: ' + PUERTO) 
+        #print(self.client_address)
         for line in self.rfile:
             print("El cliente nos manda ", line.decode('utf-8'))
 
